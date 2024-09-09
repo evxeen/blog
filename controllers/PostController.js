@@ -1,6 +1,28 @@
 import PostModel from "../models/Post.js";
 
-const update = async (req, res) => {};
+export const update = async (req, res) => {
+  try {
+    const postId = req.params.id;
+
+    await PostModel.updateOne(
+      { _id: postId },
+      {
+        title: req.body.title,
+        text: req.body.text,
+        tags: req.body.tags,
+        imageUrl: req.body.imageUrl,
+        user: req.userId,
+      },
+    )
+      .then((doc) => res.json(doc))
+      .catch((err) => res.status(500).json({ message: "Статья не найдена" }));
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: "Не удалось обновить статью",
+    });
+  }
+};
 
 export const remove = async (req, res) => {
   try {
